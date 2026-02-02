@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qonaq Otağı (Canlı)</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f0f2f5; display: flex; justify-content: center; padding: 20px; height: 100vh; margin: 0; }
+        .chat-container { width: 100%; max-width: 500px; background: white; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); overflow: hidden; display: flex; flex-direction: column; height: 90vh; }
+        .header { background: #585ce5; color: white; padding: 15px; text-align: center; font-weight: bold; font-size: 18px; }
+        #messages { flex: 1; overflow-y: auto; padding: 15px; background: #f9f9f9; display: flex; flex-direction: column; gap: 10px; }
+        .message { padding: 10px 14px; border-radius: 12px; max-width: 80%; word-wrap: break-word; font-size: 14px; position: relative; }
+        .my-msg { background: #585ce5; color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
+        .other-msg { background: #e4e6eb; color: black; align-self: flex-start; border-bottom-left-radius: 2px; }
+        .msg-sender { font-size: 11px; margin-bottom: 2px; opacity: 0.8; font-weight: bold; display: block; }
+        .input-area { padding: 15px; background: white; border-top: 1px solid #ddd; display: flex; flex-direction: column; gap: 10px; }
+        input, textarea { padding: 12px; border: 1px solid #ccc; border-radius: 8px; width: 100%; outline: none; font-size: 14px; }
+        input:focus, textarea:focus { border-color: #585ce5; }
+        button { padding: 12px; background: #585ce5; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 14px; transition: 0.2s; }
+        button:hover { background: #4347b8; }
+    </style>
+</head>
+<body>
+
+<div class="chat-container">
+    <div class="header">Qonaq Otağı 2024</div>
+    <div id="messages">
+        <div style="text-align:center; color:#999; margin-top: 20px;">Yüklənir...</div>
+    </div>
+    <div class="input-area">
+        <input type="text" id="username" placeholder="Adınız (Məs: Murad)">
+        <textarea id="message" rows="1" placeholder="Mesajınızı bura yazın..."></textarea>
+        <button id="sendBtn">GÖNDƏR</button>
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+    import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
+
+    // HAZIR KOD
+    const firebaseConfig = {
+        apiKey: "AIzaSyDbVdZY79YCM_CnpKiMKMRAkTwsqTdcT_pE",
+        authDomain: "guestbook-2024.firebaseapp.com",
+        projectId: "guestbook-2024",
+        storageBucket: "guestbook-2024.firebasestorage.app",
+        messagingSenderId: "1033392502453",
+        appId: "1:1033392502453:web:f1d8b909b890fd25af30fc",
+        databaseURL: "https://guestbook-2024-default-rtdb.firebaseio.com"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const messagesRef = ref(db, 'chat_messages');
+
+    const sendBtn = document.getElementById('sendBtn');
+    const msgInput = document.getElementById('message');
+    const nameInput = document.getElementById('username');
+    const messagesDiv = document.getElementById('messages');
+
+    sendBtn.addEventListener('click', sendMessage);
+
+    function sendMessage() {
+        const name = nameInput.value.trim();
+        const msg = msgInput.value.trim();
+
+        if (name && msg) {
+            push(messagesRef, {
+                user: name,
+                text: msg,
+                time: Date.now()
+            });
+            msgInput.value = ''; 
+        } else {
+            alert("Zəhmət olmasa ad və mesaj yazın!");
+        }
+    }
+
+    onValue(messagesRef, (snapshot) => {
+        messagesDiv.innerHTML = '';
+        if (!snapshot.exists()) {
+             messagesDiv.innerHTML = '<div style="text-align:center; color:#999; margin-top: 20px;">Heç kim yazmayıb. İlk yazan sən ol!</div>';
+             return;
+        }
+        snapshot.forEach((childSnapshot) => {
+            const data = childSnapshot.val();
+            const isMyMsg = data.user === nameInput.value.trim();
+            const msgElement = document.createElement('div');
+            msgElement.className = `message ${isMyMsg ? 'my-msg' : 'other-msg'}`;
+            msgElement.innerHTML = `<span class="msg-sender">${data.user}</span>${data.text}`;
+            messagesDiv.appendChild(msgElement);
+        });
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    });
+</script>
+
+</body>
+</html>
