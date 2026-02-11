@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Qonaq Otağı 2026</title>
+    <title>Nostalji Chat</title>
     <style>
-        /* Sizin Bəyəndiyiniz Göy Dizayn */
+        /* Göy Dizayn (Sizin bəyəndiyiniz) */
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f0f2f5; display: flex; justify-content: center; padding: 20px; height: 100vh; margin: 0; }
         
         .chat-container { width: 100%; max-width: 500px; background: white; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); overflow: hidden; display: flex; flex-direction: column; height: 90vh; }
         
-        /* Göy Başlıq */
+        /* Başlıq */
         .header { background: #585ce5; color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; }
         .header-title { font-weight: bold; font-size: 18px; }
         
-        /* Qırmızı Silmə Düyməsi */
+        /* Silmə Düyməsi */
         .btn-clear { background: #ff4757; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: bold; }
         .btn-clear:hover { background: #e84118; }
 
@@ -42,7 +42,7 @@
 
 <div class="chat-container">
     <div class="header">
-        <span class="header-title">Qonaq Otağı 2026</span>
+        <span class="header-title">Nostalji Chat</span>
         <button id="clearBtn" class="btn-clear">🗑 SİL</button>
     </div>
     
@@ -51,7 +51,7 @@
     </div>
     
     <div class="input-area">
-        <input type="text" id="username" placeholder="Adınız (Məs: Murad)">
+        <input type="text" id="username" placeholder="Adınız (Məs: Tural)">
         <textarea id="message" rows="1" placeholder="Mesajınızı bura yazın..."></textarea>
         <button id="sendBtn" class="send-btn">GÖNDƏR</button>
     </div>
@@ -61,16 +61,19 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
     import { getDatabase, ref, push, onValue, set } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
 
-    // SİZİN ORİJİNAL KODLARINIZ
+    // ----------------------------------------------------
+    // SİZİN YENİ KODLARINIZ (ARTIQ BURA ƏLAVƏ ETDİM)
+    // ----------------------------------------------------
     const firebaseConfig = {
-        apiKey: "AIzaSyDbVdZY79YCM_CnpKiMKMRAkTwsqTdcT_pE",
-        authDomain: "guestbook-2024.firebaseapp.com",
-        projectId: "guestbook-2024",
-        storageBucket: "guestbook-2024.firebasestorage.app",
-        messagingSenderId: "1033392502453",
-        appId: "1:1033392502453:web:f1d8b909b890fd25af30fc",
-        databaseURL: "https://guestbook-2024-default-rtdb.firebaseio.com"
+        apiKey: "AIzaSyDnDW8dihsKEL0LkX4IamqsBWbkWM6FpmY",
+        authDomain: "nostalji-chat-d355c.firebaseapp.com",
+        databaseURL: "https://nostalji-chat-d355c-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "nostalji-chat-d355c",
+        storageBucket: "nostalji-chat-d355c.firebasestorage.app",
+        messagingSenderId: "637311149685",
+        appId: "1:637311149685:web:d4bb09338e291eea0c7a3c"
     };
+    // ----------------------------------------------------
 
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
@@ -94,29 +97,34 @@
         }
     });
 
-    // Silmə (Zibil qabı)
+    // Silmə
     clearBtn.addEventListener('click', () => {
         if(confirm("Bütün yazışmalar silinsin?")) {
             set(messagesRef, null);
         }
     });
 
-    // Mesajları Oxuma + Saat
+    // Mesajları Oxuma
     onValue(messagesRef, (snapshot) => {
         messagesDiv.innerHTML = '';
         if (!snapshot.exists()) {
-             messagesDiv.innerHTML = '<div style="text-align:center; color:#999; margin-top: 20px;">Otaq boşdur.</div>';
+             messagesDiv.innerHTML = '<div style="text-align:center; color:#999; margin-top: 20px;">Otaq boşdur. İlk yazan sən ol!</div>';
              return;
         }
         snapshot.forEach((childSnapshot) => {
             const data = childSnapshot.val();
             const isMyMsg = data.user === nameInput.value.trim();
+            
             const date = new Date(data.time);
             const timeString = `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
 
             const div = document.createElement('div');
             div.className = `message ${isMyMsg ? 'my-msg' : 'other-msg'}`;
-            div.innerHTML = `<span class="msg-sender">${data.user}</span><span>${data.text}</span><span class="msg-time">${timeString}</span>`;
+            div.innerHTML = `
+                <span class="msg-sender">${data.user}</span>
+                <span>${data.text}</span>
+                <span class="msg-time">${timeString}</span>
+            `;
             messagesDiv.appendChild(div);
         });
         messagesDiv.scrollTop = messagesDiv.scrollHeight;
@@ -125,6 +133,7 @@
 
 </body>
 </html>
+
 
 
 
