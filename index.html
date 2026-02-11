@@ -2,174 +2,69 @@
 <html lang="az">
 <head>
     <meta charset="UTF-8">
+    <title>Xəta Yoxlanışı</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nostalji Chat</title>
     <style>
-        /* Nostalji Dizayn (Windows / Retro Stil) */
-        body { background-color: #e0e0e0; font-family: "Tahoma", "Segoe UI", sans-serif; display: flex; justify-content: center; padding: 15px; height: 100vh; margin: 0; box-sizing: border-box; }
-        
-        .chat-window { 
-            width: 100%; max-width: 500px; 
-            background: #fff; 
-            border: 2px solid #003c74; 
-            border-radius: 4px;
-            display: flex; flex-direction: column; 
-            height: 90vh; 
-            box-shadow: 5px 5px 0px rgba(0,0,0,0.2);
-        }
-
-        /* Başlıq - Qradient Göy */
-        .header { 
-            background: linear-gradient(to bottom, #0058a3 0%, #003c74 100%); 
-            color: white; 
-            padding: 10px 15px; 
-            display: flex; justify-content: space-between; align-items: center; 
-            border-bottom: 2px solid #00284d;
-        }
-        .header-title { font-weight: bold; font-size: 16px; text-shadow: 1px 1px 0 #000; }
-        
-        /* Qırmızı Təmizlə Düyməsi */
-        .btn-clear { 
-            background: linear-gradient(to bottom, #d63031 0%, #c0392b 100%);
-            color: white; border: 1px solid #7f0000; 
-            padding: 4px 10px; border-radius: 3px; cursor: pointer; font-size: 11px; font-weight: bold; 
-            box-shadow: inset 1px 1px 0 rgba(255,255,255,0.3);
-        }
-        .btn-clear:active { transform: translateY(1px); }
-
-        /* Mesajlar Sahəsi */
-        #messages { 
-            flex: 1; overflow-y: auto; 
-            padding: 15px; background: #f0f2f5; 
-            display: flex; flex-direction: column; gap: 10px; 
-            border-bottom: 1px solid #ccc;
-        }
-        
-        .message { 
-            padding: 8px 12px; border-radius: 6px; 
-            max-width: 80%; word-wrap: break-word; font-size: 14px; 
-            box-shadow: 1px 1px 3px rgba(0,0,0,0.1);
-            display: flex; flex-direction: column;
-        }
-        
-        .my-msg { background: #dff9fb; border: 1px solid #b2bec3; align-self: flex-end; }
-        .other-msg { background: #ffffff; border: 1px solid #ccc; align-self: flex-start; }
-        
-        .msg-sender { font-size: 11px; font-weight: bold; color: #2d3436; margin-bottom: 3px; }
-        .msg-time { font-size: 9px; align-self: flex-end; color: #636e72; margin-top: 3px; }
-
-        /* Giriş Sahəsi */
-        .input-area { padding: 12px; background: #dfe6e9; display: flex; flex-direction: column; gap: 8px; }
-        input, textarea { 
-            padding: 10px; border: 1px solid #95a5a6; border-radius: 3px; 
-            width: 100%; outline: none; font-size: 14px; box-sizing: border-box;
-        }
-        input:focus, textarea:focus { border-color: #0984e3; background: #fff; }
-        
-        .send-btn { 
-            width: 100%; padding: 10px; 
-            background: linear-gradient(to bottom, #0984e3 0%, #00cec9 100%); 
-            color: white; border: 1px solid #006266; border-radius: 3px; 
-            font-weight: bold; cursor: pointer; text-shadow: 1px 1px 0 rgba(0,0,0,0.2);
-        }
-        .send-btn:active { background: #00cec9; }
-
-        /* Status Mesajı */
-        .status { text-align: center; color: #636e72; font-size: 13px; margin-top: 20px; font-style: italic; }
+        body { font-family: sans-serif; padding: 20px; background: #eee; }
+        .box { background: white; padding: 20px; border-radius: 10px; border: 2px solid #333; }
+        .error-box { background: #ffdddd; color: #d8000c; padding: 15px; border: 1px solid #d8000c; margin-top: 20px; display: none; }
+        h2 { margin-top: 0; }
     </style>
 </head>
 <body>
 
-<div class="chat-window">
-    <div class="header">
-        <span class="header-title">Nostalji Chat</span>
-        <button id="clearBtn" class="btn-clear">OTAĞI TƏMİZLƏ</button>
-    </div>
-    
-    <div id="messages">
-        <div class="status">Mesajlar yüklənir...</div>
-    </div>
-    
-    <div class="input-area">
-        <input type="text" id="username" placeholder="Ləqəbiniz...">
-        <textarea id="message" rows="1" placeholder="Buraya yazın..."></textarea>
-        <button id="sendBtn" class="send-btn">GÖNDƏR</button>
-    </div>
+<div class="box">
+    <h2>Nostalji Chat - Yoxlama Rejimi</h2>
+    <p>Vəziyyət: <span id="status">Bağlanılır...</span></p>
+    <div id="error-log" class="error-box"></div>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-    import { getDatabase, ref, push, onValue, set } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
+    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
 
-    // ----------------------------------------------------
-    // SİZİN KODLARINIZ (Bura dəyməyin, hazırdır)
-    // ----------------------------------------------------
-    const firebaseConfig = {
-        apiKey: "AIzaSyDbVdZY79YCM_CnpKiMKMRAkTwsqTdcT_pE",
-        authDomain: "guestbook-2024.firebaseapp.com",
-        projectId: "guestbook-2024",
-        storageBucket: "guestbook-2024.firebasestorage.app",
-        messagingSenderId: "1033392502453",
-        appId: "1:1033392502453:web:f1d8b909b890fd25af30fc",
-        databaseURL: "https://guestbook-2024-default-rtdb.firebaseio.com"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-    const messagesRef = ref(db, 'chat_messages');
-
-    const sendBtn = document.getElementById('sendBtn');
-    const clearBtn = document.getElementById('clearBtn');
-    const msgInput = document.getElementById('message');
-    const nameInput = document.getElementById('username');
-    const messagesDiv = document.getElementById('messages');
-
-    // Göndər
-    sendBtn.addEventListener('click', sendMessage);
-
-    function sendMessage() {
-        const name = nameInput.value.trim();
-        const msg = msgInput.value.trim();
-        if (name && msg) {
-            push(messagesRef, { user: name, text: msg, time: Date.now() });
-            msgInput.value = ''; 
-        } else {
-            alert("Ad və mesaj yazın!");
-        }
+    // Xətaları ekrana yazdıran funksiya
+    function showError(msg) {
+        const errDiv = document.getElementById('error-log');
+        const statusSpan = document.getElementById('status');
+        errDiv.style.display = 'block';
+        errDiv.innerHTML += `<strong>XƏTA:</strong> ${msg}<br><br>`;
+        statusSpan.innerText = "Xəta baş verdi!";
+        statusSpan.style.color = "red";
     }
 
-    // Təmizlə
-    clearBtn.addEventListener('click', () => {
-        if(confirm("Bütün yazışmalar silinsin?")) {
-            set(messagesRef, null);
-        }
-    });
+    try {
+        const firebaseConfig = {
+            apiKey: "AIzaSyDbVdZY79YCM_CnpKiMKMRAkTwsqTdcT_pE",
+            authDomain: "guestbook-2024.firebaseapp.com",
+            projectId: "guestbook-2024",
+            storageBucket: "guestbook-2024.firebasestorage.app",
+            messagingSenderId: "1033392502453",
+            appId: "1:1033392502453:web:f1d8b909b890fd25af30fc",
+            databaseURL: "https://guestbook-2024-default-rtdb.firebaseio.com"
+        };
 
-    // Oxu
-    onValue(messagesRef, (snapshot) => {
-        messagesDiv.innerHTML = '';
-        if (!snapshot.exists()) {
-             messagesDiv.innerHTML = '<div class="status">Otaq boşdur.</div>';
-             return;
-        }
-        snapshot.forEach((childSnapshot) => {
-            const data = childSnapshot.val();
-            const isMyMsg = data.user === nameInput.value.trim();
-            const date = new Date(data.time);
-            const timeString = `${date.getHours().toString().padStart(2,'0')}:${date.getMinutes().toString().padStart(2,'0')}`;
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const messagesRef = ref(db, 'chat_messages');
 
-            const div = document.createElement('div');
-            div.className = `message ${isMyMsg ? 'my-msg' : 'other-msg'}`;
-            div.innerHTML = `<span class="msg-sender">${data.user}</span><span>${data.text}</span><span class="msg-time">${timeString}</span>`;
-            messagesDiv.appendChild(div);
+        document.getElementById('status').innerText = "Bazaya qoşulur...";
+
+        onValue(messagesRef, (snapshot) => {
+            document.getElementById('status').innerText = "Uğurlu! (Data gəldi)";
+            document.getElementById('status').style.color = "green";
+            alert("Təbriklər! Baza işləyir. İndi əsl kodu qaytara bilərik.");
+        }, (error) => {
+            console.error(error);
+            showError(error.message); // Ekrana xətanı yazır
         });
-        messagesDiv.scrollTop = messagesDiv.scrollHeight;
-    }, (error) => {
-        messagesDiv.innerHTML = '<div class="status" style="color:red">Xəta: İnternet və ya kod problemi!</div>';
-        console.error(error);
-    });
+
+    } catch (e) {
+        showError(e.message);
+    }
 </script>
 
 </body>
 </html>
+
 
