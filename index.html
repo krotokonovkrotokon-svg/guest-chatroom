@@ -3,134 +3,347 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nostalji Chat</title>
+    <title>Qonaq Otağı</title>
     <style>
-        /* Göy Dizayn (Sizin bəyəndiyiniz) */
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f0f2f5; display: flex; justify-content: center; padding: 20px; height: 100vh; margin: 0; }
-        
-        .chat-container { width: 100%; max-width: 500px; background: white; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); overflow: hidden; display: flex; flex-direction: column; height: 90vh; }
-        
-        /* Başlıq */
-        .header { background: #585ce5; color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; }
-        .header-title { font-weight: bold; font-size: 18px; }
-        
-        /* Silmə Düyməsi */
-        .btn-clear { background: #ff4757; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: bold; }
-        .btn-clear:hover { background: #e84118; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-        /* Mesajlar */
-        #messages { flex: 1; overflow-y: auto; padding: 15px; background: #f9f9f9; display: flex; flex-direction: column; gap: 8px; }
-        
-        .message { padding: 8px 12px; border-radius: 12px; max-width: 80%; word-wrap: break-word; font-size: 14px; position: relative; display: flex; flex-direction: column; }
-        
-        .my-msg { background: #585ce5; color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
-        .other-msg { background: #e4e6eb; color: black; align-self: flex-start; border-bottom-left-radius: 2px; }
-        
-        .msg-sender { font-size: 11px; font-weight: bold; margin-bottom: 2px; opacity: 0.9; }
-        .msg-time { font-size: 9px; align-self: flex-end; margin-top: 4px; opacity: 0.7; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
 
-        /* Yazı Yeri */
-        .input-area { padding: 15px; background: white; border-top: 1px solid #ddd; display: flex; flex-direction: column; gap: 10px; }
-        input, textarea { padding: 12px; border: 1px solid #ccc; border-radius: 8px; width: 100%; outline: none; font-size: 14px; }
-        input:focus, textarea:focus { border-color: #585ce5; }
-        
-        .send-btn { padding: 12px; background: #585ce5; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 14px; }
-        .send-btn:hover { background: #4347b8; }
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            background: white;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            border-bottom: 2px solid #000;
+        }
+
+        .header-icon {
+            width: 40px;
+            height: 40px;
+            margin-right: 15px;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 600;
+        }
+
+        .online-status {
+            background-color: #d4edda;
+            border: 2px solid #7bc77b;
+            padding: 15px;
+            margin: 20px;
+            text-align: center;
+            font-size: 18px;
+        }
+
+        .online-dot {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            background-color: #7bc77b;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .name-section {
+            border: 2px solid #000;
+            margin: 20px;
+            padding: 20px;
+        }
+
+        .name-section h3 {
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .name-input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .name-input-group input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+
+        .btn-save {
+            background-color: #000;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .btn-save:hover {
+            background-color: #333;
+        }
+
+        .current-name {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .messages-section {
+            border: 2px solid #000;
+            margin: 20px;
+            padding: 20px;
+            min-height: 300px;
+        }
+
+        .message {
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .message:last-child {
+            border-bottom: none;
+        }
+
+        .message-author {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .message-content {
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .message-time {
+            color: #999;
+            font-size: 13px;
+        }
+
+        .message-input-section {
+            display: flex;
+            gap: 10px;
+            margin: 20px;
+        }
+
+        .message-input-section input {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #000;
+            font-size: 16px;
+        }
+
+        .btn-send {
+            background-color: #000;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 16px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .btn-send:hover {
+            background-color: #333;
+        }
+
+        .clear-section {
+            margin: 20px;
+        }
+
+        .btn-clear {
+            width: 100%;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-clear:hover {
+            background-color: #c82333;
+        }
+
+        .trash-icon {
+            font-size: 20px;
+        }
+
+        .empty-messages {
+            text-align: center;
+            color: #999;
+            padding: 40px;
+        }
     </style>
 </head>
 <body>
+    <div class="container">
+        <div class="header">
+            <svg class="header-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+            <h1>Qonaq Otağı</h1>
+        </div>
 
-<div class="chat-container">
-    <div class="header">
-        <span class="header-title">Nostalji Chat</span>
-        <button id="clearBtn" class="btn-clear">🗑 SİL</button>
+        <div class="online-status">
+            <span class="online-dot"></span>
+            <strong>Onlayn: <span id="onlineCount">1</span> nəfər</strong>
+        </div>
+
+        <div class="name-section">
+            <h3>Adınız:</h3>
+            <div class="name-input-group">
+                <input type="text" id="nameInput" placeholder="Adınızı daxil edin">
+                <button class="btn-save" onclick="saveName()">Yadda Saxla</button>
+            </div>
+            <div class="current-name">Cari adınız: <strong id="currentName">Bahadur</strong></div>
+        </div>
+
+        <div class="messages-section" id="messagesContainer">
+            <div class="empty-messages">Hələ mesaj yoxdur</div>
+        </div>
+
+        <div class="message-input-section">
+            <input type="text" id="messageInput" placeholder="Mesajınızı yazın..." onkeypress="handleKeyPress(event)">
+            <button class="btn-send" onclick="sendMessage()">Göndər</button>
+        </div>
+
+        <div class="clear-section">
+            <button class="btn-clear" onclick="clearMessages()">
+                <span class="trash-icon">🗑️</span>
+                <span>Bütün otaqdakı mesajları təmizlə</span>
+            </button>
+        </div>
     </div>
-    
-    <div id="messages">
-        <div style="text-align:center; color:#999; margin-top: 20px;">Yüklənir...</div>
-    </div>
-    
-    <div class="input-area">
-        <input type="text" id="username" placeholder="Adınız (Məs: Tural)">
-        <textarea id="message" rows="1" placeholder="Mesajınızı bura yazın..."></textarea>
-        <button id="sendBtn" class="send-btn">GÖNDƏR</button>
-    </div>
-</div>
 
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-    import { getDatabase, ref, push, onValue, set } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
+    <script>
+        let userName = 'Bahadur';
+        let messages = [];
 
-    // ----------------------------------------------------
-    // SİZİN YENİ KODLARINIZ (ARTIQ BURA ƏLAVƏ ETDİM)
-    // ----------------------------------------------------
-    const firebaseConfig = {
-        apiKey: "AIzaSyDnDW8dihsKEL0LkX4IamqsBWbkWM6FpmY",
-        authDomain: "nostalji-chat-d355c.firebaseapp.com",
-        databaseURL: "https://nostalji-chat-d355c-default-rtdb.europe-west1.firebasedatabase.app",
-        projectId: "nostalji-chat-d355c",
-        storageBucket: "nostalji-chat-d355c.firebasestorage.app",
-        messagingSenderId: "637311149685",
-        appId: "1:637311149685:web:d4bb09338e291eea0c7a3c"
-    };
-    // ----------------------------------------------------
-
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-    const messagesRef = ref(db, 'chat_messages');
-
-    const sendBtn = document.getElementById('sendBtn');
-    const clearBtn = document.getElementById('clearBtn');
-    const msgInput = document.getElementById('message');
-    const nameInput = document.getElementById('username');
-    const messagesDiv = document.getElementById('messages');
-
-    // Mesaj Göndərmə
-    sendBtn.addEventListener('click', () => {
-        const name = nameInput.value.trim();
-        const msg = msgInput.value.trim();
-        if (name && msg) {
-            push(messagesRef, { user: name, text: msg, time: Date.now() });
-            msgInput.value = ''; 
-        } else {
-            alert("Zəhmət olmasa ad və mesaj yazın!");
-        }
-    });
-
-    // Silmə
-    clearBtn.addEventListener('click', () => {
-        if(confirm("Bütün yazışmalar silinsin?")) {
-            set(messagesRef, null);
-        }
-    });
-
-    // Mesajları Oxuma
-    onValue(messagesRef, (snapshot) => {
-        messagesDiv.innerHTML = '';
-        if (!snapshot.exists()) {
-             messagesDiv.innerHTML = '<div style="text-align:center; color:#999; margin-top: 20px;">Otaq boşdur. İlk yazan sən ol!</div>';
-             return;
-        }
-        snapshot.forEach((childSnapshot) => {
-            const data = childSnapshot.val();
-            const isMyMsg = data.user === nameInput.value.trim();
+        // Load data from localStorage
+        function loadData() {
+            const savedName = localStorage.getItem('guestbook_name');
+            const savedMessages = localStorage.getItem('guestbook_messages');
             
-            const date = new Date(data.time);
-            const timeString = `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+            if (savedName) {
+                userName = savedName;
+                document.getElementById('currentName').textContent = userName;
+                document.getElementById('nameInput').value = '';
+            }
+            
+            if (savedMessages) {
+                messages = JSON.parse(savedMessages);
+                renderMessages();
+            }
+            
+            updateOnlineCount();
+        }
 
-            const div = document.createElement('div');
-            div.className = `message ${isMyMsg ? 'my-msg' : 'other-msg'}`;
-            div.innerHTML = `
-                <span class="msg-sender">${data.user}</span>
-                <span>${data.text}</span>
-                <span class="msg-time">${timeString}</span>
-            `;
-            messagesDiv.appendChild(div);
-        });
-        messagesDiv.scrollTop = messagesDiv.scrollHeight;
-    });
-</script>
+        // Save name
+        function saveName() {
+            const input = document.getElementById('nameInput');
+            const newName = input.value.trim();
+            
+            if (newName) {
+                userName = newName;
+                document.getElementById('currentName').textContent = userName;
+                localStorage.setItem('guestbook_name', userName);
+                input.value = '';
+            }
+        }
 
+        // Send message
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const messageText = input.value.trim();
+            
+            if (messageText) {
+                const message = {
+                    author: userName,
+                    content: messageText,
+                    timestamp: new Date().toLocaleString('az-AZ', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit'
+                    })
+                };
+                
+                messages.push(message);
+                localStorage.setItem('guestbook_messages', JSON.stringify(messages));
+                renderMessages();
+                input.value = '';
+            }
+        }
+
+        // Handle Enter key press
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        // Render messages
+        function renderMessages() {
+            const container = document.getElementById('messagesContainer');
+            
+            if (messages.length === 0) {
+                container.innerHTML = '<div class="empty-messages">Hələ mesaj yoxdur</div>';
+                return;
+            }
+            
+            container.innerHTML = messages.map(msg => `
+                <div class="message">
+                    <div class="message-author">${msg.author}</div>
+                    <div class="message-content">${msg.content}</div>
+                    <div class="message-time">${msg.timestamp}</div>
+                </div>
+            `).join('');
+            
+            // Scroll to bottom
+            container.scrollTop = container.scrollHeight;
+        }
+
+        // Clear all messages
+        function clearMessages() {
+            messages = [];
+            localStorage.removeItem('guestbook_messages');
+            renderMessages();
+        }
+
+        // Update online count (simulated)
+        function updateOnlineCount() {
+            const count = Math.floor(Math.random() * 5) + 1;
+            document.getElementById('onlineCount').textContent = count;
+        }
+
+        // Initialize
+        loadData();
+        
+        // Update online count periodically
+        setInterval(updateOnlineCount, 30000);
+    </script>
 </body>
 </html>
 
