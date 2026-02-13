@@ -5,197 +5,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Qonaq Otağı</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f5f5f5; padding: 20px; }
+        .container { max-width: 960px; margin: 0 auto; background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); overflow: hidden; }
+        
+        /* Başlıq */
+        .header { display: flex; align-items: center; justify-content: center; padding: 20px; border-bottom: 2px solid #000; background: #fff; }
+        .header-icon { width: 40px; height: 40px; margin-right: 15px; }
+        .header h1 { font-size: 32px; font-weight: 600; }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background-color: #f5f5f5;
-            padding: 20px;
-        }
+        /* Onlayn Status */
+        .online-status { background-color: #d4edda; border: 2px solid #7bc77b; padding: 15px; margin: 20px; text-align: center; font-size: 18px; border-radius: 4px; }
+        .online-dot { display: inline-block; width: 12px; height: 12px; background-color: #7bc77b; border-radius: 50%; margin-right: 10px; }
 
-        .container {
-            max-width: 960px;
-            margin: 0 auto;
-            background: white;
-        }
+        /* Ad Bölməsi */
+        .name-section { border: 2px solid #000; margin: 20px; padding: 20px; border-radius: 4px; }
+        .name-section h3 { margin-bottom: 15px; font-size: 18px; }
+        .name-input-group { display: flex; gap: 10px; margin-bottom: 15px; }
+        .name-input-group input { flex: 1; padding: 12px; border: 1px solid #ccc; font-size: 16px; border-radius: 4px; }
+        .btn-save { background-color: #000; color: white; border: none; padding: 12px 30px; font-size: 16px; cursor: pointer; border-radius: 4px; }
+        .btn-save:hover { background-color: #333; }
+        .current-name { color: #666; font-size: 14px; }
 
-        .header {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            border-bottom: 2px solid #000;
-        }
+        /* Mesajlar */
+        .messages-section { border: 2px solid #000; margin: 20px; padding: 20px; height: 400px; overflow-y: auto; border-radius: 4px; background: #fafafa; }
+        .message { padding: 15px 0; border-bottom: 1px solid #eee; }
+        .message:last-child { border-bottom: none; }
+        .message-author { font-weight: 600; font-size: 16px; margin-bottom: 5px; color: #000; }
+        .message-content { color: #333; margin-bottom: 5px; font-size: 15px; line-height: 1.4; }
+        .message-time { color: #999; font-size: 12px; text-align: right; }
 
-        .header-icon {
-            width: 40px;
-            height: 40px;
-            margin-right: 15px;
-        }
+        /* Mesaj Girişi */
+        .message-input-section { display: flex; gap: 10px; margin: 20px; }
+        .message-input-section input { flex: 1; padding: 15px; border: 2px solid #000; font-size: 16px; border-radius: 4px; }
+        .btn-send { background-color: #000; color: white; border: none; padding: 15px 40px; font-size: 16px; cursor: pointer; border-radius: 4px; font-weight: bold; }
+        .btn-send:hover { background-color: #333; }
 
-        .header h1 {
-            font-size: 32px;
-            font-weight: 600;
-        }
-
-        .online-status {
-            background-color: #d4edda;
-            border: 2px solid #7bc77b;
-            padding: 15px;
-            margin: 20px;
-            text-align: center;
-            font-size: 18px;
-        }
-
-        .online-dot {
-            display: inline-block;
-            width: 12px;
-            height: 12px;
-            background-color: #7bc77b;
-            border-radius: 50%;
-            margin-right: 10px;
-        }
-
-        .name-section {
-            border: 2px solid #000;
-            margin: 20px;
-            padding: 20px;
-        }
-
-        .name-section h3 {
-            margin-bottom: 15px;
-            font-size: 18px;
-        }
-
-        .name-input-group {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        .name-input-group input {
-            flex: 1;
-            padding: 12px;
-            border: 1px solid #ccc;
-            font-size: 16px;
-        }
-
-        .btn-save {
-            background-color: #000;
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            font-size: 16px;
-            cursor: pointer;
-            white-space: nowrap;
-        }
-
-        .btn-save:hover {
-            background-color: #333;
-        }
-
-        .current-name {
-            color: #666;
-            font-size: 14px;
-        }
-
-        .messages-section {
-            border: 2px solid #000;
-            margin: 20px;
-            padding: 20px;
-            min-height: 300px;
-        }
-
-        .message {
-            padding: 15px 0;
-            border-bottom: 1px solid #eee;
-        }
-
-        .message:last-child {
-            border-bottom: none;
-        }
-
-        .message-author {
-            font-weight: 600;
-            font-size: 16px;
-            margin-bottom: 5px;
-        }
-
-        .message-content {
-            color: #333;
-            margin-bottom: 5px;
-        }
-
-        .message-time {
-            color: #999;
-            font-size: 13px;
-        }
-
-        .message-input-section {
-            display: flex;
-            gap: 10px;
-            margin: 20px;
-        }
-
-        .message-input-section input {
-            flex: 1;
-            padding: 15px;
-            border: 2px solid #000;
-            font-size: 16px;
-        }
-
-        .btn-send {
-            background-color: #000;
-            color: white;
-            border: none;
-            padding: 15px 40px;
-            font-size: 16px;
-            cursor: pointer;
-            white-space: nowrap;
-        }
-
-        .btn-send:hover {
-            background-color: #333;
-        }
-
-        .clear-section {
-            margin: 20px;
-        }
-
-        .btn-clear {
-            width: 100%;
-            background-color: #dc3545;
-            color: white;
-            border: none;
-            padding: 15px;
-            font-size: 16px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .btn-clear:hover {
-            background-color: #c82333;
-        }
-
-        .trash-icon {
-            font-size: 20px;
-        }
-
-        .empty-messages {
-            text-align: center;
-            color: #999;
-            padding: 40px;
-        }
+        /* Təmizləmə */
+        .clear-section { margin: 20px; }
+        .btn-clear { width: 100%; background-color: #dc3545; color: white; border: none; padding: 15px; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; border-radius: 4px; }
+        .btn-clear:hover { background-color: #c82333; }
+        .empty-messages { text-align: center; color: #999; padding: 40px; }
     </style>
 </head>
 <body>
+
     <div class="container">
         <div class="header">
             <svg class="header-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -206,146 +60,142 @@
 
         <div class="online-status">
             <span class="online-dot"></span>
-            <strong>Onlayn: <span id="onlineCount">1</span> nəfər</strong>
+            <strong>Status: <span id="onlineCount">Aktiv</span></strong>
         </div>
 
         <div class="name-section">
             <h3>Adınız:</h3>
             <div class="name-input-group">
                 <input type="text" id="nameInput" placeholder="Adınızı daxil edin">
-                <button class="btn-save" onclick="saveName()">Yadda Saxla</button>
+                <button class="btn-save" id="saveNameBtn">Yadda Saxla</button>
             </div>
-            <div class="current-name">Cari adınız: <strong id="currentName">Bahadur</strong></div>
+            <div class="current-name">Cari adınız: <strong id="currentName">Qonaq</strong></div>
         </div>
 
         <div class="messages-section" id="messagesContainer">
-            <div class="empty-messages">Hələ mesaj yoxdur</div>
+            <div class="empty-messages">Mesajlar yüklənir...</div>
         </div>
 
         <div class="message-input-section">
-            <input type="text" id="messageInput" placeholder="Mesajınızı yazın..." onkeypress="handleKeyPress(event)">
-            <button class="btn-send" onclick="sendMessage()">Göndər</button>
+            <input type="text" id="messageInput" placeholder="Mesajınızı yazın...">
+            <button class="btn-send" id="sendBtn">Göndər</button>
         </div>
 
         <div class="clear-section">
-            <button class="btn-clear" onclick="clearMessages()">
-                <span class="trash-icon">🗑️</span>
+            <button class="btn-clear" id="clearBtn">
+                <span>🗑️</span>
                 <span>Bütün otaqdakı mesajları təmizlə</span>
             </button>
         </div>
     </div>
 
-    <script>
-        let userName = 'Bahadur';
-        let messages = [];
+    <!-- Firebase Kodları -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+        import { getDatabase, ref, push, onValue, set } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
 
-        // Load data from localStorage
-        function loadData() {
-            const savedName = localStorage.getItem('guestbook_name');
-            const savedMessages = localStorage.getItem('guestbook_messages');
-            
-            if (savedName) {
-                userName = savedName;
-                document.getElementById('currentName').textContent = userName;
-                document.getElementById('nameInput').value = '';
-            }
-            
-            if (savedMessages) {
-                messages = JSON.parse(savedMessages);
-                renderMessages();
-            }
-            
-            updateOnlineCount();
-        }
+        // SİZİN CONFİG KODLARINIZ
+        const firebaseConfig = {
+            apiKey: "AIzaSyDnDW8dihsKEL0LkX4IamqsBWbkWM6FpmY",
+            authDomain: "nostalji-chat-d355c.firebaseapp.com",
+            databaseURL: "https://nostalji-chat-d355c-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "nostalji-chat-d355c",
+            storageBucket: "nostalji-chat-d355c.firebasestorage.app",
+            messagingSenderId: "637311149685",
+            appId: "1:637311149685:web:d4bb09338e291eea0c7a3c"
+        };
 
-        // Save name
-        function saveName() {
-            const input = document.getElementById('nameInput');
-            const newName = input.value.trim();
-            
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const messagesRef = ref(db, 'chat_messages');
+
+        // Elementləri seçirik
+        const messagesDiv = document.getElementById('messagesContainer');
+        const messageInput = document.getElementById('messageInput');
+        const nameInput = document.getElementById('nameInput');
+        const currentNameDisplay = document.getElementById('currentName');
+        const saveNameBtn = document.getElementById('saveNameBtn');
+        const sendBtn = document.getElementById('sendBtn');
+        const clearBtn = document.getElementById('clearBtn');
+
+        // Adı Yaddaşdan Oxumaq
+        let userName = localStorage.getItem('chat_username') || 'Qonaq';
+        currentNameDisplay.innerText = userName;
+
+        // Adı Dəyişmək
+        saveNameBtn.addEventListener('click', () => {
+            const newName = nameInput.value.trim();
             if (newName) {
                 userName = newName;
-                document.getElementById('currentName').textContent = userName;
-                localStorage.setItem('guestbook_name', userName);
-                input.value = '';
+                localStorage.setItem('chat_username', newName);
+                currentNameDisplay.innerText = newName;
+                nameInput.value = '';
+                alert("Adınız yadda saxlandı!");
             }
-        }
+        });
 
-        // Send message
+        // Mesaj Göndərmək
         function sendMessage() {
-            const input = document.getElementById('messageInput');
-            const messageText = input.value.trim();
-            
-            if (messageText) {
-                const message = {
+            const text = messageInput.value.trim();
+            if (text) {
+                push(messagesRef, {
                     author: userName,
-                    content: messageText,
-                    timestamp: new Date().toLocaleString('az-AZ', {
-                        day: '2-digit',
-                        month: '2-digit',
-                        year: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        second: '2-digit'
-                    })
-                };
-                
-                messages.push(message);
-                localStorage.setItem('guestbook_messages', JSON.stringify(messages));
-                renderMessages();
-                input.value = '';
+                    content: text,
+                    timestamp: Date.now()
+                });
+                messageInput.value = '';
             }
         }
 
-        // Handle Enter key press
-        function handleKeyPress(event) {
-            if (event.key === 'Enter') {
-                sendMessage();
-            }
-        }
+        sendBtn.addEventListener('click', sendMessage);
+        
+        // Enter düyməsi ilə göndərmək
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
 
-        // Render messages
-        function renderMessages() {
-            const container = document.getElementById('messagesContainer');
+        // Bütün Mesajları Silmək
+        clearBtn.addEventListener('click', () => {
+            if(confirm("Bütün yazışmalar hər kəs üçün silinəcək. Razısınız?")) {
+                set(messagesRef, null);
+            }
+        });
+
+        // Mesajları Canlı Oxumaq (Firebase)
+        onValue(messagesRef, (snapshot) => {
+            messagesDiv.innerHTML = '';
             
-            if (messages.length === 0) {
-                container.innerHTML = '<div class="empty-messages">Hələ mesaj yoxdur</div>';
+            if (!snapshot.exists()) {
+                messagesDiv.innerHTML = '<div class="empty-messages">Hələ mesaj yoxdur</div>';
                 return;
             }
-            
-            container.innerHTML = messages.map(msg => `
-                <div class="message">
+
+            snapshot.forEach((childSnapshot) => {
+                const msg = childSnapshot.val();
+                
+                // Vaxtı düzəltmək
+                const date = new Date(msg.timestamp);
+                const timeStr = date.toLocaleTimeString('az-AZ', { hour: '2-digit', minute: '2-digit' });
+
+                const msgElement = document.createElement('div');
+                msgElement.className = 'message';
+                msgElement.innerHTML = `
                     <div class="message-author">${msg.author}</div>
                     <div class="message-content">${msg.content}</div>
-                    <div class="message-time">${msg.timestamp}</div>
-                </div>
-            `).join('');
-            
-            // Scroll to bottom
-            container.scrollTop = container.scrollHeight;
-        }
+                    <div class="message-time">${timeStr}</div>
+                `;
+                messagesDiv.appendChild(msgElement);
+            });
 
-        // Clear all messages
-        function clearMessages() {
-            messages = [];
-            localStorage.removeItem('guestbook_messages');
-            renderMessages();
-        }
+            // Avtomatik aşağı sürüşdür
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        });
 
-        // Update online count (simulated)
-        function updateOnlineCount() {
-            const count = Math.floor(Math.random() * 5) + 1;
-            document.getElementById('onlineCount').textContent = count;
-        }
-
-        // Initialize
-        loadData();
-        
-        // Update online count periodically
-        setInterval(updateOnlineCount, 30000);
     </script>
+
 </body>
 </html>
+
 
 
 
